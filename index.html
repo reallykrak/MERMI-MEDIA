@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MERMI MEDIA – Instagram Beğeni Hizmetleri</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #090c12;
+  --surface: #0e1320;
+  --surface2: #141929;
+  --border: #1e2740;
+  --accent: #e63946;
+  --accent2: #ff6b35;
+  --blue: #1d72e8;
+  --gold: #f4c430;
+  --text: #e8eaf0;
+  --muted: #7a85a0;
+  --card: #111827;
+  --glow: rgba(230,57,70,0.35);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed;
+  top: -30%;
+  left: -10%;
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(circle, rgba(230,57,70,0.07) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -20%;
+  right: -10%;
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, rgba(29,114,232,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(9,12,18,0.95);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 1.5rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.logo-img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+.logo-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 2px;
+  color: #fff;
+}
+.logo-text span { color: var(--accent); }
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+.balance-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--gold);
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.balance-badge:hover { border-color: var(--gold); }
+.balance-badge svg { flex-shrink: 0; }
+.btn { border-radius: 8px; font-family: 'Outfit', sans-serif; font-weight: 600; cursor: pointer; border: none; transition: all .2s; font-size: 0.82rem; padding: 8px 14px; white-space: nowrap; }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+.btn-primary { background: linear-gradient(135deg, var(--accent), #c1121f); color: #fff; box-shadow: 0 0 16px var(--glow); }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 24px var(--glow); }
+.btn-load { background: linear-gradient(135deg, var(--blue), #1558b0); color: #fff; }
+.btn-load:hover { transform: translateY(-1px); }
+.user-menu-wrap { position: relative; }
+.user-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all .2s;
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+.user-btn:hover { border-color: var(--accent); }
+.user-avatar {
+  width: 28px; height: 28px;
+  background: linear-gradient(135deg, var(--accent), var(--blue));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+}
+.user-name { max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.user-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px;
+  min-width: 180px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+  z-index: 999;
+  animation: scaleIn .2s ease;
+}
+.user-dropdown.open { display: block; }
+.dropdown-item {
+  display: block;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .15s;
+  text-decoration: none;
+}
+.dropdown-item:hover { background: var(--surface2); color: var(--text); }
+.dropdown-divider { height: 1px; background: var(--border); margin: 6px 0; }
+.dropdown-item.logout { color: var(--accent); }
+.dropdown-item.logout:hover { background: rgba(230,57,70,0.1); color: var(--accent); }
+.dropdown-user-info { padding: 10px 12px 6px; }
+.dropdown-user-info .dui-name { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+.dropdown-user-info .dui-email { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  pointer-events: none;
+}
+.toast {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  animation: toastIn .3s ease, toastOut .3s ease 2.7s both;
+  white-space: nowrap;
+  pointer-events: auto;
+}
+.toast.success { border-color: rgba(34,197,94,0.4); color: #22c55e; }
+.toast.error { border-color: rgba(230,57,70,0.4); color: var(--accent); }
+@keyframes toastIn { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+@keyframes toastOut { from { opacity:1; transform:translateY(0); } to { opacity:0; transform:translateY(16px); } }
+.hero {
+  position: relative;
+  z-index: 1;
+  padding: 80px 1.5rem 60px;
+  text-align: center;
+  max-width: 860px;
+  margin: 0 auto;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(230,57,70,0.1);
+  border: 1px solid rgba(230,57,70,0.3);
+  border-radius: 100px;
+  padding: 5px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.5px;
+  animation: fadeDown .6s ease both;
+}
+.hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.8rem, 8vw, 6rem);
+  line-height: 0.95;
+  letter-spacing: 3px;
+  margin-bottom: 1.4rem;
+  animation: fadeDown .7s .1s ease both;
+}
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero p {
+  font-size: 1rem;
+  color: var(--muted);
+  max-width: 520px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.7;
+  animation: fadeDown .7s .2s ease both;
+}
+.hero-cta {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeDown .7s .3s ease both;
+}
+.btn-hero { padding: 13px 30px; font-size: 0.95rem; border-radius: 10px; }
+.stats-bar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 860px;
+  margin: 0 auto 60px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  overflow: hidden;
+  animation: fadeUp .7s .4s ease both;
+}
+.stat-item {
+  flex: 1;
+  min-width: 120px;
+  padding: 24px 16px;
+  text-align: center;
+  border-right: 1px solid var(--border);
+  position: relative;
+}
+.stat-item:last-child { border-right: none; }
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  letter-spacing: 1px;
+  color: var(--text);
+  display: block;
+}
+.stat-num.red { color: var(--accent); }
+.stat-num.blue { color: var(--blue); }
+.stat-num.gold { color: var(--gold); }
+.stat-label { font-size: 0.72rem; color: var(--muted); font-weight: 500; margin-top: 2px; }
+.section { position: relative; z-index: 1; padding: 50px 1.5rem; max-width: 1200px; margin: 0 auto; }
+.section-header { margin-bottom: 36px; }
+.section-tag { display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 0.7rem; }
+.section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.8rem, 5vw, 3rem); letter-spacing: 2px; line-height: 1; }
+.section-sub { color: var(--muted); font-size: 0.9rem; margin-top: 8px; }
+.order-section {
+  position: relative;
+  z-index: 1;
+  padding: 50px 1.5rem;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.order-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.4);
+}
+.order-card-header {
+  background: linear-gradient(135deg, rgba(230,57,70,0.12), rgba(255,107,53,0.08));
+  border-bottom: 1px solid var(--border);
+  padding: 28px 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.order-card-header .ig-icon {
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.order-card-header-text h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem;
+  letter-spacing: 2px;
+}
+.order-card-header-text p { font-size: 0.82rem; color: var(--muted); margin-top: 3px; }
+.order-card-body { padding: 32px; }
+.service-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(34,197,94,0.08);
+  border: 1px solid rgba(34,197,94,0.2);
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #22c55e;
+  margin-bottom: 24px;
+}
+.form-group { margin-bottom: 20px; }
+.form-label { font-size: 0.78rem; font-weight: 700; color: var(--muted); margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; letter-spacing: 0.5px; text-transform: uppercase; }
+.form-label span { font-weight: 400; text-transform: none; font-size: 0.75rem; }
+.form-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  transition: border-color .2s, box-shadow .2s;
+  outline: none;
+}
+.form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(230,57,70,0.1); }
+.form-input::placeholder { color: var(--muted); }
+.form-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.price-preview {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.price-preview-label { font-size: 0.72rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.price-preview-amount {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem;
+  color: var(--accent);
+  letter-spacing: 1px;
+  line-height: 1;
+  margin-top: 4px;
+}
+.price-preview-right { text-align: right; }
+.price-per { font-size: 0.72rem; color: var(--muted); }
+.price-per strong { color: var(--text); }
+.btn-order {
+  width: 100%;
+  padding: 15px;
+  font-size: 1rem;
+  border-radius: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+.btn-order::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  transform: translateX(-100%);
+  transition: transform .5s;
+}
+.btn-order:hover::after { transform: translateX(100%); }
+.order-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 20px;
+}
+.order-feature {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.order-feature-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.2rem;
+}
+.feature-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px 20px;
+  transition: border-color .2s;
+}
+.feature-card:hover { border-color: rgba(29,114,232,0.4); }
+.feature-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+.fi-red { background: rgba(230,57,70,0.12); }
+.fi-blue { background: rgba(29,114,232,0.12); }
+.fi-gold { background: rgba(244,196,48,0.12); }
+.fi-green { background: rgba(34,197,94,0.12); }
+.feature-title { font-weight: 700; font-size: 0.92rem; margin-bottom: 6px; }
+.feature-text { font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
+.how-steps { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.2rem; counter-reset: steps; }
+.step-card { position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 28px 22px; counter-increment: steps; }
+.step-card::before { content: counter(steps, decimal-leading-zero); font-family: 'Bebas Neue', sans-serif; font-size: 3rem; color: rgba(230,57,70,0.1); position: absolute; top: 12px; right: 16px; line-height: 1; }
+.step-title { font-weight: 700; font-size: 0.92rem; margin-bottom: 8px; }
+.step-text { font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
+.testimonials { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.2rem; }
+.testi-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px; }
+.testi-stars { color: var(--gold); font-size: 0.82rem; margin-bottom: 10px; }
+.testi-text { font-size: 0.82rem; color: var(--muted); line-height: 1.65; margin-bottom: 14px; font-style: italic; }
+.testi-author { display: flex; align-items: center; gap: 10px; }
+.testi-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--blue)); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem; color: #fff; flex-shrink: 0; }
+.testi-name { font-weight: 700; font-size: 0.82rem; }
+.testi-handle { font-size: 0.7rem; color: var(--muted); }
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px 30px;
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  animation: scaleIn .25s ease;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-close { position: absolute; top: 14px; right: 16px; background: none; border: none; color: var(--muted); font-size: 1.2rem; cursor: pointer; transition: color .2s; z-index: 10; }
+.modal-close:hover { color: var(--text); }
+.modal-logo { text-align: center; font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 3px; margin-bottom: 4px; }
+.modal-logo span { color: var(--accent); }
+.modal-sub { text-align: center; font-size: 0.8rem; color: var(--muted); margin-bottom: 24px; }
+.modal-tabs { display: flex; background: var(--bg); border-radius: 10px; padding: 4px; margin-bottom: 22px; }
+.modal-tab { flex: 1; padding: 8px; text-align: center; font-size: 0.82rem; font-weight: 600; border-radius: 8px; cursor: pointer; color: var(--muted); transition: all .2s; font-family: 'Outfit', sans-serif; border: none; background: none; }
+.modal-tab.active { background: var(--accent); color: #fff; }
+.form-group-m { margin-bottom: 14px; }
+.form-label-m { font-size: 0.76rem; font-weight: 600; color: var(--muted); margin-bottom: 6px; display: block; }
+.form-input-m {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 10px 14px;
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.87rem;
+  transition: border-color .2s;
+  outline: none;
+}
+.form-input-m:focus { border-color: var(--accent); }
+.form-input-m::placeholder { color: var(--muted); }
+.btn-form { width: 100%; padding: 12px; font-size: 0.9rem; border-radius: 10px; margin-top: 6px; }
+.form-footer-m { text-align: center; font-size: 0.75rem; color: var(--muted); margin-top: 12px; }
+.form-footer-m a { color: var(--accent); text-decoration: none; }
+.form-panel { display: none; }
+.form-panel.active { display: block; }
+.input-error { border-color: var(--accent) !important; }
+.error-msg { font-size: 0.72rem; color: var(--accent); margin-top: 4px; display: none; }
+.error-msg.show { display: block; }
+.balance-modal .balance-amount {
+  text-align: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3rem;
+  color: var(--gold);
+  letter-spacing: 2px;
+  margin: 10px 0 2px;
+}
+.balance-modal .balance-label { text-align: center; font-size: 0.78rem; color: var(--muted); margin-bottom: 22px; }
+.balance-amounts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 14px; }
+.amount-btn {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--text);
+  cursor: pointer;
+  transition: all .2s;
+}
+.amount-btn:hover, .amount-btn.selected { background: rgba(230,57,70,0.1); border-color: var(--accent); color: var(--accent); }
+.card-form-wrap {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 14px;
+}
+.card-form-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-form-title svg { flex-shrink: 0; }
+.card-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.card-input-wrap { position: relative; }
+.card-input-wrap .form-input-m {
+  padding-right: 40px;
+}
+.card-input-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  pointer-events: none;
+}
+.card-preview {
+  background: linear-gradient(135deg, #1a2540, #0d1625);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.card-preview::before {
+  content: '';
+  position: absolute;
+  top: -20px; right: -20px;
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  background: rgba(230,57,70,0.08);
+}
+.card-preview::after {
+  content: '';
+  position: absolute;
+  bottom: -30px; right: 20px;
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: rgba(29,114,232,0.08);
+}
+.card-preview-chip {
+  width: 32px; height: 24px;
+  background: linear-gradient(135deg, var(--gold), #c9a227);
+  border-radius: 5px;
+  margin-bottom: 16px;
+}
+.card-preview-number {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 4px;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.card-preview-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
+.card-preview-label { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+.card-preview-val { font-size: 0.78rem; font-weight: 600; color: var(--text); margin-top: 2px; }
+.card-network {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  color: var(--gold);
+}
+.ticker { background: var(--surface); border-bottom: 1px solid var(--border); padding: 7px 0; overflow: hidden; }
+.ticker-inner { display: flex; animation: ticker 28s linear infinite; white-space: nowrap; }
+.ticker-item { display: flex; align-items: center; gap: 6px; padding: 0 2rem; font-size: 0.73rem; color: var(--muted); }
+.ticker-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.ticker-highlight { color: var(--gold); font-weight: 600; }
+footer { position: relative; z-index: 1; background: var(--surface); border-top: 1px solid var(--border); padding: 50px 1.5rem 30px; }
+.footer-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2.5rem; margin-bottom: 36px; }
+.footer-brand p { font-size: 0.8rem; color: var(--muted); line-height: 1.7; margin: 12px 0; }
+.footer-col h4 { font-weight: 700; font-size: 0.83rem; margin-bottom: 12px; }
+.footer-col a { display: block; color: var(--muted); text-decoration: none; font-size: 0.78rem; margin-bottom: 7px; transition: color .2s; }
+.footer-col a:hover { color: var(--text); }
+.footer-bottom { max-width: 1200px; margin: 0 auto; padding-top: 22px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+.footer-bottom p { font-size: 0.73rem; color: var(--muted); }
+.footer-social { display: flex; gap: 0.4rem; }
+.social-btn { width: 32px; height: 32px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; font-size: 0.78rem; transition: all .2s; }
+.social-btn:hover { border-color: var(--accent); color: var(--accent); }
+.processing-overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: rgba(9,12,18,0.85);
+  backdrop-filter: blur(4px);
+  border-radius: 20px;
+  z-index: 10;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.processing-overlay.show { display: flex; }
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+.processing-text { font-size: 0.82rem; font-weight: 600; color: var(--muted); }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+@keyframes fadeDown { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: scale(1); } }
+@media (max-width: 768px) {
+  .footer-inner { grid-template-columns: 1fr 1fr; }
+  .stats-bar .stat-item { border-right: none; border-bottom: 1px solid var(--border); flex: 0 0 50%; }
+  .stats-bar .stat-item:nth-child(2n) { border-right: none; }
+  .stats-bar .stat-item:nth-last-child(-n+2) { border-bottom: none; }
+  .order-card-body { padding: 22px 18px; }
+  .order-card-header { padding: 22px 18px; }
+  .order-features { grid-template-columns: 1fr; }
+  .modal { padding: 28px 20px; }
+  .logo-text { font-size: 18px; }
+  .balance-badge { padding: 5px 8px; font-size: 0.74rem; }
+  .btn { padding: 7px 11px; font-size: 0.78rem; }
+  .card-row { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .footer-inner { grid-template-columns: 1fr; }
+  .hero { padding: 50px 1rem 40px; }
+  .hero h1 { font-size: 2.4rem; }
+  .stats-bar .stat-item { flex: 0 0 100%; border-bottom: 1px solid var(--border); }
+  .stats-bar .stat-item:last-child { border-bottom: none; }
+  .user-name { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="ticker">
+  <div class="ticker-inner">
+    <div class="ticker-item"><span class="ticker-dot"></span> <span class="ticker-highlight">@kullanici_123</span> 50 Instagram Beğeni satın aldı</div>
+    <div class="ticker-item"><span class="ticker-dot"></span> <span class="ticker-highlight">@marka_xyz</span> 50 Instagram Beğeni satın aldı</div>
+    <div class="ticker-item"><span class="ticker-dot"></span> <span class="ticker-highlight">@dijital_dev</span> 50 Instagram Beğeni satın aldı</div>
+    <div class="ticker-item"><span class="ticker-dot"></span> <span class="ticker-highlight">@influencer_tr</span> 50 Instagram Beğeni satın aldı</div>
+    <div class="ticker-item"><span class="ticker-dot"></span> <span class="ticker-highlight">@shop_store</span> 50 Instagram Beğeni satın aldı</div>
+    <div class="ticker-item"><span class="ticker-dot"></span> <span class="ticker-highlight">@content_maker</span> 50 Instagram Beğeni satın aldı</div>
+    <div class="ticker-item"><span class="ticker-dot"></span> <span class="ticker-highlight">@kullanici_123</span> 50 Instagram Beğeni satın aldı</div>
+    <div class="ticker-item"><span class="ticker-dot"></span> <span class="ticker-highlight">@marka_xyz</span> 50 Instagram Beğeni satın aldı</div>
+    <div class="ticker-item"><span class="ticker-dot"></span> <span class="ticker-highlight">@dijital_dev</span> 50 Instagram Beğeni satın aldı</div>
+    <div class="ticker-item"><span class="ticker-dot"></span> <span class="ticker-highlight">@influencer_tr</span> 50 Instagram Beğeni satın aldı</div>
+    <div class="ticker-item"><span class="ticker-dot"></span> <span class="ticker-highlight">@shop_store</span> 50 Instagram Beğeni satın aldı</div>
+    <div class="ticker-item"><span class="ticker-dot"></span> <span class="ticker-highlight">@content_maker</span> 50 Instagram Beğeni satın aldı</div>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-logo" href="#">
+    <img class="logo-img" src="png/mermi.png" alt="Mermi Media">
+    <span class="logo-text">MERMI <span>MEDIA</span></span>
+  </a>
+  <div class="nav-right" id="navRight"></div>
+</nav>
+
+<section class="hero" id="anasayfa">
+  <div class="hero-badge">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>
+    Türkiye'nin #1 SMM Paneli
+  </div>
+  <h1>INSTAGRAM'DA<br><em>GÜÇLÜ OL</em></h1>
+  <p>Organik Türk kullanıcılardan gerçek, hızlı ve güvenilir Instagram beğeni hizmetleri. Saniyeler içinde sipariş ver.</p>
+  <div class="hero-cta">
+    <button class="btn btn-primary btn-hero" onclick="scrollToOrder()">Hemen Sipariş Ver →</button>
+    <button class="btn btn-outline btn-hero" onclick="openModal('auth'); switchTab('register')">Üye Ol</button>
+  </div>
+</section>
+
+<div class="section" style="padding-top:0;">
+  <div class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-num red">2.4M+</span>
+      <span class="stat-label">Tamamlanan Sipariş</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num blue">98.7%</span>
+      <span class="stat-label">Müşteri Memnuniyeti</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num gold">7/24</span>
+      <span class="stat-label">Canlı Destek</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" style="color:#22c55e">3 Sn</span>
+      <span class="stat-label">Başlama Süresi</span>
+    </div>
+  </div>
+</div>
+
+<div class="order-section" id="siparis">
+  <div class="order-card" style="position:relative;">
+    <div class="processing-overlay" id="orderProcessing">
+      <div class="spinner"></div>
+      <div class="processing-text">Siparişiniz işleniyor...</div>
+    </div>
+    <div class="order-card-header">
+      <div class="ig-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+      </div>
+      <div class="order-card-header-text">
+        <h2>INSTAGRAM BEĞENİ</h2>
+        <p>Organik Türk Kullanıcılardan Gerçek Beğeni</p>
+      </div>
+    </div>
+    <div class="order-card-body">
+      <div class="service-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Organik Instagram Türk Beğeni · 30 Gün Garantili
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          Instagram Gönderi Linki
+          <span>https://instagram.com/p/...</span>
+        </label>
+        <input class="form-input" type="url" id="postLink" placeholder="https://www.instagram.com/p/XXXXX/">
+      </div>
+
+      <div class="price-preview">
+        <div class="price-preview-left">
+          <div class="price-preview-label">Toplam Tutar</div>
+          <div class="price-preview-amount">₺100.00</div>
+        </div>
+        <div class="price-preview-right">
+          <div class="price-per">Miktar</div>
+          <div class="price-per"><strong>50 Türk Beğeni</strong></div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-order" onclick="handleOrder()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:6px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        Şimdi Sipariş Ver — ₺100.00
+      </button>
+
+      <div class="order-features">
+        <div class="order-feature"><div class="order-feature-dot"></div><span>Gerçek Türk Kullanıcılar</span></div>
+        <div class="order-feature"><div class="order-feature-dot"></div><span>Anlık Başlama</span></div>
+        <div class="order-feature"><div class="order-feature-dot"></div><span>30 Gün Garanti</span></div>
+        <div class="order-feature"><div class="order-feature-dot"></div><span>7/24 Destek</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="section" id="ozellikler">
+  <div class="section-header">
+    <div class="section-tag">● NEDEN BİZ</div>
+    <h2 class="section-title">FARKIMIZI<br>HİSSEDECEKSİN</h2>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon fi-red">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e63946" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </div>
+      <div class="feature-title">Anlık Teslimat</div>
+      <div class="feature-text">Siparişin onaylandıktan sonra ortalama 3 saniye içinde işleme başlar. Bekleme süresi yok.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-blue">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1d72e8" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <div class="feature-title">%100 Güvenli</div>
+      <div class="feature-text">SSL şifreli altyapı, güvenli ödeme sistemleri ve gizlilik politikamızla verilerin tam koruma altında.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-gold">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f4c430" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <div class="feature-title">En Uygun Fiyat</div>
+      <div class="feature-text">Sektördeki en rekabetçi fiyatlarla kaliteli hizmet. 50 beğeni sabit ₺100 ile avantajlı fiyat.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-green">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
+      </div>
+      <div class="feature-title">30 Gün Garanti</div>
+      <div class="feature-text">Satın aldığın tüm hizmetlerde 30 gün dolum garantisi. Düşüş olursa ücretsiz tamamlarız.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-red">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e63946" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div class="feature-title">Gerçek Hesaplar</div>
+      <div class="feature-text">Bot hesap yok. Gerçek ve aktif Türk kullanıcılardan oluşan kaliteli ağımızla güvenilir büyüme.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-blue">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1d72e8" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div class="feature-title">7/24 Destek</div>
+      <div class="feature-text">WhatsApp ve canlı sohbet üzerinden her an ulaşabilirsin. Sorununu dakikalar içinde çözüyoruz.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-gold">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f4c430" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      </div>
+      <div class="feature-title">Sipariş Takibi</div>
+      <div class="feature-text">Panelinizden tüm siparişlerinizi gerçek zamanlı takip edebilirsiniz. Şeffaf raporlama.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-green">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="feature-title">Türk Beğeni</div>
+      <div class="feature-text">Sadece gerçek Türk kullanıcı hesaplarından organik görünümlü beğeniler. Hesabınız güvende.</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="nasil-calisir">
+  <div class="section-header">
+    <div class="section-tag">● NASIL ÇALIŞIR</div>
+    <h2 class="section-title">4 ADIMDA<br>BÜYÜMEYE BAŞLA</h2>
+  </div>
+  <div class="how-steps">
+    <div class="step-card">
+      <div class="step-title">Üye Ol</div>
+      <div class="step-text">Sağ üstteki "Kayıt Ol" butonuna tıkla. E-posta ve şifren ile saniyeler içinde hesabını oluştur.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-title">Bakiye Yükle</div>
+      <div class="step-text">Kredi kartı ile güvenli şekilde bakiye yükle. Anında hesabına yansır.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-title">Link Gir</div>
+      <div class="step-text">Instagram gönderine ait linki gir ve 50 beğeni siparişini oluştur.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-title">Büyü!</div>
+      <div class="step-text">Siparişin anında işleme girer. Panelinizden ilerlemeyi canlı olarak takip et.</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="yorumlar">
+  <div class="section-header">
+    <div class="section-tag">● YORUMLAR</div>
+    <h2 class="section-title">MÜŞTERİLERİMİZ<br>NE DİYOR</h2>
+  </div>
+  <div class="testimonials">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">Mermi Media ile Instagram gönderim 50 Türk beğeni aldı. Hesabım etkilenmedi, süper hızlı geldi!</div>
+      <div class="testi-author">
+        <div class="testi-avatar">AK</div>
+        <div><div class="testi-name">Ahmet Kaya</div><div class="testi-handle">@ahmet_kaya</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">Aldığım beğeni paketi beklediğimden çok daha hızlı geldi. Fiyat performans açısından sektörün en iyisi.</div>
+      <div class="testi-author">
+        <div class="testi-avatar">ZD</div>
+        <div><div class="testi-name">Zeynep Demir</div><div class="testi-handle">@zeynep_content</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">İşletme sayfam için aldığım beğeni paketi tam beklediğim gibi çalıştı. Müşteri desteği de çok yardımsever.</div>
+      <div class="testi-author">
+        <div class="testi-avatar">ME</div>
+        <div><div class="testi-name">Mert Erdoğan</div><div class="testi-handle">@mert_dijital</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★☆</div>
+      <div class="testi-text">30 gün garanti özelliği gerçekten işe yarıyor. Beğeniler organik görünümlü ve kalıcı.</div>
+      <div class="testi-author">
+        <div class="testi-avatar">SY</div>
+        <div><div class="testi-name">Selin Yıldız</div><div class="testi-handle">@selinvlogs</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">Birkaç aydır kullanıyorum, her siparişim eksiksiz geldi. Bakiye yükleme de çok kolay ve hızlı.</div>
+      <div class="testi-author">
+        <div class="testi-avatar">BO</div>
+        <div><div class="testi-name">Burak Öztürk</div><div class="testi-handle">@burak.media</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">Türk beğeni paketi 1 saatte tamamlandı. Fiyatlar çok uygun, başka bir yerle kıyaslanamaz.</div>
+      <div class="testi-author">
+        <div class="testi-avatar">NA</div>
+        <div><div class="testi-name">Nil Aydın</div><div class="testi-handle">@nil_influencer</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="iletisim">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="nav-logo" style="margin-bottom:10px;">
+        <img class="logo-img" src="png/mermi.png" alt="Mermi Media">
+        <span class="logo-text">MERMI <span>MEDIA</span></span>
+      </div>
+      <p>Türkiye'nin en güvenilir Instagram büyüme platformu. Organik Türk beğenilerle hesabını güçlendir.</p>
+      <div style="display:flex;gap:6px;margin-top:10px;">
+        <span style="background:rgba(34,197,94,0.12);color:#22c55e;border:1px solid rgba(34,197,94,0.2);border-radius:6px;padding:4px 10px;font-size:0.7rem;font-weight:600;">● Sistemler Aktif</span>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Hizmetler</h4>
+      <a href="#siparis">Instagram Türk Beğeni</a>
+      <a href="#siparis">Organik Beğeni</a>
+      <a href="#siparis">Hızlı Teslimat</a>
+      <a href="#nasil-calisir">Nasıl Çalışır</a>
+    </div>
+    <div class="footer-col">
+      <h4>Hesap</h4>
+      <a href="#" onclick="openModal('auth');switchTab('register')">Kayıt Ol</a>
+      <a href="#" onclick="openModal('auth');switchTab('login')">Giriş Yap</a>
+      <a href="#" onclick="openModal('balance')">Bakiye Yükle</a>
+      <a href="#">Siparişlerim</a>
+    </div>
+    <div class="footer-col">
+      <h4>Destek</h4>
+      <a href="#">SSS</a>
+      <a href="#">Canlı Destek</a>
+      <a href="#">WhatsApp</a>
+      <a href="#">Gizlilik Politikası</a>
+      <a href="#">Kullanım Şartları</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 MERMI MEDIA. Tüm hakları saklıdır.</p>
+    <div class="footer-social">
+      <a class="social-btn" href="#">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.74l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+      <a class="social-btn" href="#">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      </a>
+      <a class="social-btn" href="#">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('auth')">✕</button>
+    <div class="modal-logo">MERMI <span>MEDIA</span></div>
+    <div class="modal-sub">Sosyal medyada gücünü artır</div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="loginTab" onclick="switchTab('login')">Giriş Yap</button>
+      <button class="modal-tab" id="registerTab" onclick="switchTab('register')">Kayıt Ol</button>
+    </div>
+    <div class="form-panel active" id="loginPanel">
+      <div class="form-group-m">
+        <label class="form-label-m">E-posta Adresi</label>
+        <input class="form-input-m" type="email" id="loginEmail" placeholder="ornek@email.com">
+        <div class="error-msg" id="loginEmailErr">Geçerli bir e-posta giriniz.</div>
+      </div>
+      <div class="form-group-m">
+        <label class="form-label-m">Şifre</label>
+        <input class="form-input-m" type="password" id="loginPassword" placeholder="••••••••">
+        <div class="error-msg" id="loginPassErr">Şifre en az 6 karakter olmalıdır.</div>
+      </div>
+      <div class="error-msg" id="loginGenErr" style="text-align:center;margin-bottom:8px;"></div>
+      <button class="btn btn-primary btn-form" onclick="handleLogin()">Giriş Yap</button>
+      <div class="form-footer-m"><a href="#">Şifremi Unuttum</a></div>
+    </div>
+    <div class="form-panel" id="registerPanel">
+      <div class="form-group-m">
+        <label class="form-label-m">Ad Soyad</label>
+        <input class="form-input-m" type="text" id="regName" placeholder="Adınız Soyadınız">
+        <div class="error-msg" id="regNameErr">Ad Soyad en az 2 karakter olmalıdır.</div>
+      </div>
+      <div class="form-group-m">
+        <label class="form-label-m">E-posta Adresi</label>
+        <input class="form-input-m" type="email" id="regEmail" placeholder="ornek@email.com">
+        <div class="error-msg" id="regEmailErr">Geçerli bir e-posta giriniz.</div>
+      </div>
+      <div class="form-group-m">
+        <label class="form-label-m">Şifre</label>
+        <input class="form-input-m" type="password" id="regPassword" placeholder="En az 8 karakter">
+        <div class="error-msg" id="regPassErr">Şifre en az 8 karakter olmalıdır.</div>
+      </div>
+      <div class="error-msg" id="regGenErr" style="text-align:center;margin-bottom:8px;"></div>
+      <button class="btn btn-primary btn-form" onclick="handleRegister()">Kayıt Ol</button>
+      <div class="form-footer-m">Kayıt olarak <a href="#">Kullanım Şartları</a>'nı kabul etmiş olursun.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="balanceModal">
+  <div class="modal balance-modal" style="position:relative;">
+    <div class="processing-overlay" id="payProcessing">
+      <div class="spinner"></div>
+      <div class="processing-text" id="payProcessingText">Ödeme işleniyor...</div>
+    </div>
+    <button class="modal-close" onclick="closeModal('balance')">✕</button>
+    <div class="modal-logo">BAKİYE <span>YÜKLE</span></div>
+    <div class="balance-amount" id="modalBalance">₺0.00</div>
+    <div class="balance-label">Mevcut Bakiyeniz</div>
+    <div class="balance-amounts">
+      <div class="amount-btn" onclick="selectAmount(50, this)">₺50</div>
+      <div class="amount-btn" onclick="selectAmount(100, this)">₺100</div>
+      <div class="amount-btn" onclick="selectAmount(200, this)">₺200</div>
+      <div class="amount-btn" onclick="selectAmount(500, this)">₺500</div>
+      <div class="amount-btn" onclick="selectAmount(1000, this)">₺1.000</div>
+      <div class="amount-btn" onclick="selectAmount(2000, this)">₺2.000</div>
+    </div>
+    <div class="form-group-m">
+      <label class="form-label-m">Özel Tutar (₺)</label>
+      <input class="form-input-m" type="number" id="customAmount" placeholder="Tutar giriniz..." oninput="setCustomAmount(this.value)">
+    </div>
+
+    <div class="card-form-wrap">
+      <div class="card-form-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        Kredi / Banka Kartı
+      </div>
+
+      <div class="card-preview">
+        <div class="card-preview-chip"></div>
+        <div class="card-preview-number" id="cardPreviewNum">•••• •••• •••• ••••</div>
+        <div class="card-preview-bottom">
+          <div>
+            <div class="card-preview-label">Kart Sahibi</div>
+            <div class="card-preview-val" id="cardPreviewName">AD SOYAD</div>
+          </div>
+          <div>
+            <div class="card-preview-label">Son Kullanma</div>
+            <div class="card-preview-val" id="cardPreviewExp">AA/YY</div>
+          </div>
+          <div class="card-network" id="cardNetwork">VISA</div>
+        </div>
+      </div>
+
+      <div class="form-group-m">
+        <label class="form-label-m">Kart Numarası</label>
+        <div class="card-input-wrap">
+          <input class="form-input-m" type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCardNumber(this)" autocomplete="cc-number">
+          <span class="card-input-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </span>
+        </div>
+        <div class="error-msg" id="cardNumErr">Geçerli bir kart numarası giriniz.</div>
+      </div>
+
+      <div class="form-group-m">
+        <label class="form-label-m">Kart Üzerindeki Ad</label>
+        <input class="form-input-m" type="text" id="cardName" placeholder="AD SOYAD" oninput="updateCardPreview()" autocomplete="cc-name" style="text-transform:uppercase;">
+        <div class="error-msg" id="cardNameErr">Kart sahibinin adını giriniz.</div>
+      </div>
+
+      <div class="card-row">
+        <div class="form-group-m">
+          <label class="form-label-m">Son Kullanma</label>
+          <input class="form-input-m" type="text" id="cardExp" placeholder="AA/YY" maxlength="5" oninput="formatExpiry(this)" autocomplete="cc-exp">
+          <div class="error-msg" id="cardExpErr">Geçerli bir tarih giriniz.</div>
+        </div>
+        <div class="form-group-m">
+          <label class="form-label-m">CVV</label>
+          <div class="card-input-wrap">
+            <input class="form-input-m" type="password" id="cardCvv" placeholder="•••" maxlength="4" autocomplete="cc-csc">
+            <span class="card-input-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </span>
+          </div>
+          <div class="error-msg" id="cardCvvErr">CVV 3-4 karakter olmalıdır.</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-form" onclick="handleTopup()" id="payBtn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="display:inline;vertical-align:middle;margin-right:6px;"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      Güvenli Ödeme Yap
+    </button>
+    <div style="text-align:center;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:6px;">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7a85a0" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <span style="font-size:0.7rem;color:var(--muted);">256-bit SSL şifreli güvenli ödeme</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const DB_KEY = 'mermiMedia_users_v1';
+const SESSION_KEY = 'mermiMedia_session_v1';
+const ORDER_PRICE = 100;
+
+function getUsers() {
+  try { return JSON.parse(localStorage.getItem(DB_KEY)) || {}; }
+  catch { return {}; }
+}
+function saveUsers(users) {
+  localStorage.setItem(DB_KEY, JSON.stringify(users));
+}
+function getSession() {
+  try { return JSON.parse(localStorage.getItem(SESSION_KEY)) || null; }
+  catch { return null; }
+}
+function saveSession(user) {
+  localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+}
+function clearSession() {
+  localStorage.removeItem(SESSION_KEY);
+}
+function updateSessionBalance(bal) {
+  const s = getSession();
+  if (!s) return;
+  s.balance = bal;
+  saveSession(s);
+  const users = getUsers();
+  if (users[s.email]) { users[s.email].balance = bal; saveUsers(users); }
+}
+
+let currentUser = getSession();
+let selectedAmount = 0;
+
+function showToast(msg, type) {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast ' + (type || 'success');
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3100);
+}
+
+function renderNav() {
+  const nr = document.getElementById('navRight');
+  const balTxt = currentUser ? '₺' + currentUser.balance.toFixed(2) : '₺0.00';
+
+  if (currentUser) {
+    const initials = currentUser.name.split(' ').map(function(w){ return w[0]; }).join('').slice(0,2).toUpperCase();
+    nr.innerHTML =
+      '<div class="balance-badge" onclick="openModal(\'balance\')">' +
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' +
+        '<strong id="balanceDisplay">' + balTxt + '</strong>' +
+      '</div>' +
+      '<div class="user-menu-wrap">' +
+        '<div class="user-btn" onclick="toggleUserMenu()">' +
+          '<div class="user-avatar">' + initials + '</div>' +
+          '<span class="user-name">' + currentUser.name.split(' ')[0] + '</span>' +
+          '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>' +
+        '</div>' +
+        '<div class="user-dropdown" id="userDropdown">' +
+          '<div class="dropdown-user-info"><div class="dui-name">' + currentUser.name + '</div><div class="dui-email">' + currentUser.email + '</div></div>' +
+          '<div class="dropdown-divider"></div>' +
+          '<div class="dropdown-item" onclick="openModal(\'balance\');closeDropdown()">Bakiye Yükle</div>' +
+          '<div class="dropdown-item" onclick="showToast(\'Siparişlerim yakında aktif olacak.\',\'success\');closeDropdown()">Siparişlerim</div>' +
+          '<div class="dropdown-divider"></div>' +
+          '<div class="dropdown-item logout" onclick="handleLogout()">Çıkış Yap</div>' +
+        '</div>' +
+      '</div>';
+  } else {
+    nr.innerHTML =
+      '<div class="balance-badge" onclick="openModal(\'balance\')">' +
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' +
+        '<strong id="balanceDisplay">₺0.00</strong>' +
+      '</div>' +
+      '<button class="btn btn-load" onclick="openModal(\'balance\')">+ Yükle</button>' +
+      '<button class="btn btn-outline" onclick="openModal(\'auth\'); switchTab(\'login\')">Giriş Yap</button>' +
+      '<button class="btn btn-primary" onclick="openModal(\'auth\'); switchTab(\'register\')">Kayıt Ol</button>';
+  }
+}
+
+function toggleUserMenu() {
+  var d = document.getElementById('userDropdown');
+  if (d) d.classList.toggle('open');
+}
+function closeDropdown() {
+  var d = document.getElementById('userDropdown');
+  if (d) d.classList.remove('open');
+}
+document.addEventListener('click', function(e) {
+  var wrap = document.querySelector('.user-menu-wrap');
+  if (wrap && !wrap.contains(e.target)) closeDropdown();
+});
+
+function handleLogin() {
+  var email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  var pass = document.getElementById('loginPassword').value;
+  var valid = true;
+  hideErr('loginEmailErr'); hideErr('loginPassErr'); hideErr('loginGenErr');
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showErr('loginEmailErr'); document.getElementById('loginEmail').classList.add('input-error'); valid = false; }
+  else { document.getElementById('loginEmail').classList.remove('input-error'); }
+  if (!pass || pass.length < 6) { showErr('loginPassErr'); document.getElementById('loginPassword').classList.add('input-error'); valid = false; }
+  else { document.getElementById('loginPassword').classList.remove('input-error'); }
+  if (!valid) return;
+  var users = getUsers();
+  var user = users[email];
+  if (!user || user.password !== btoa(pass)) {
+    document.getElementById('loginGenErr').textContent = 'E-posta veya şifre hatalı.';
+    showErr('loginGenErr'); return;
+  }
+  currentUser = { name: user.name, email: user.email, balance: user.balance };
+  saveSession(currentUser);
+  closeModal('auth');
+  renderNav();
+  showToast('Hoş geldiniz, ' + user.name.split(' ')[0] + '!', 'success');
+}
+
+function handleRegister() {
+  var name = document.getElementById('regName').value.trim();
+  var email = document.getElementById('regEmail').value.trim().toLowerCase();
+  var pass = document.getElementById('regPassword').value;
+  var valid = true;
+  hideErr('regNameErr'); hideErr('regEmailErr'); hideErr('regPassErr'); hideErr('regGenErr');
+  if (!name || name.length < 2) { showErr('regNameErr'); document.getElementById('regName').classList.add('input-error'); valid = false; }
+  else { document.getElementById('regName').classList.remove('input-error'); }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showErr('regEmailErr'); document.getElementById('regEmail').classList.add('input-error'); valid = false; }
+  else { document.getElementById('regEmail').classList.remove('input-error'); }
+  if (!pass || pass.length < 8) { showErr('regPassErr'); document.getElementById('regPassword').classList.add('input-error'); valid = false; }
+  else { document.getElementById('regPassword').classList.remove('input-error'); }
+  if (!valid) return;
+  var users = getUsers();
+  if (users[email]) { document.getElementById('regGenErr').textContent = 'Bu e-posta zaten kayıtlı.'; showErr('regGenErr'); return; }
+  users[email] = { name: name, email: email, password: btoa(pass), balance: 0 };
+  saveUsers(users);
+  currentUser = { name: name, email: email, balance: 0 };
+  saveSession(currentUser);
+  closeModal('auth');
+  renderNav();
+  showToast('Hesabınız oluşturuldu! Hoş geldiniz, ' + name.split(' ')[0] + '!', 'success');
+}
+
+function handleLogout() {
+  currentUser = null;
+  clearSession();
+  closeDropdown();
+  renderNav();
+  showToast('Çıkış yapıldı.', 'success');
+}
+
+function showErr(id) { var el = document.getElementById(id); if(el){ el.classList.add('show'); el.style.display='block'; } }
+function hideErr(id) { var el = document.getElementById(id); if(el){ el.classList.remove('show'); el.style.display='none'; } }
+
+function openModal(type) {
+  if (type === 'auth') document.getElementById('authModal').classList.add('open');
+  if (type === 'balance') {
+    document.getElementById('balanceModal').classList.add('open');
+    var bal = currentUser ? currentUser.balance : 0;
+    document.getElementById('modalBalance').textContent = '₺' + bal.toFixed(2);
+  }
+}
+function closeModal(type) {
+  if (type === 'auth') document.getElementById('authModal').classList.remove('open');
+  if (type === 'balance') {
+    document.getElementById('balanceModal').classList.remove('open');
+    document.getElementById('payProcessing').classList.remove('show');
+  }
+}
+function switchTab(tab) {
+  var lt = document.getElementById('loginTab'), rt = document.getElementById('registerTab');
+  var lp = document.getElementById('loginPanel'), rp = document.getElementById('registerPanel');
+  if (tab === 'login') { lt.classList.add('active'); rt.classList.remove('active'); lp.classList.add('active'); rp.classList.remove('active'); }
+  else { rt.classList.add('active'); lt.classList.remove('active'); rp.classList.add('active'); lp.classList.remove('active'); }
+}
+document.querySelectorAll('.modal-overlay').forEach(function(o) {
+  o.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('open'); });
+});
+
+function selectAmount(amt, btn) {
+  selectedAmount = amt;
+  document.querySelectorAll('.amount-btn').forEach(function(b) { b.classList.remove('selected'); });
+  btn.classList.add('selected');
+  document.getElementById('customAmount').value = '';
+}
+function setCustomAmount(val) {
+  selectedAmount = parseFloat(val) || 0;
+  document.querySelectorAll('.amount-btn').forEach(function(b) { b.classList.remove('selected'); });
+}
+
+function formatCardNumber(input) {
+  var val = input.value.replace(/\D/g, '').slice(0, 16);
+  var formatted = val.match(/.{1,4}/g);
+  input.value = formatted ? formatted.join(' ') : '';
+  var display = val.padEnd(16, '•').match(/.{1,4}/g).join(' ');
+  document.getElementById('cardPreviewNum').textContent = display;
+  var net = 'VISA';
+  if (val[0] === '5') net = 'MASTERCARD';
+  else if (val[0] === '3') net = 'AMEX';
+  else if (val[0] === '9') net = 'TROY';
+  document.getElementById('cardNetwork').textContent = net;
+}
+
+function formatExpiry(input) {
+  var val = input.value.replace(/\D/g, '').slice(0, 4);
+  if (val.length >= 3) val = val.slice(0,2) + '/' + val.slice(2);
+  input.value = val;
+  document.getElementById('cardPreviewExp').textContent = val || 'AA/YY';
+}
+
+function updateCardPreview() {
+  var name = document.getElementById('cardName').value.toUpperCase() || 'AD SOYAD';
+  document.getElementById('cardPreviewName').textContent = name;
+}
+
+function validateCard() {
+  var num = document.getElementById('cardNumber').value.replace(/\s/g,'');
+  var name = document.getElementById('cardName').value.trim();
+  var exp = document.getElementById('cardExp').value;
+  var cvv = document.getElementById('cardCvv').value;
+  var valid = true;
+  hideErr('cardNumErr'); hideErr('cardNameErr'); hideErr('cardExpErr'); hideErr('cardCvvErr');
+  if (num.length < 16) { showErr('cardNumErr'); valid = false; }
+  if (name.length < 3) { showErr('cardNameErr'); valid = false; }
+  if (!/^\d{2}\/\d{2}$/.test(exp)) { showErr('cardExpErr'); valid = false; }
+  if (cvv.length < 3) { showErr('cardCvvErr'); valid = false; }
+  return valid;
+}
+
+function handleTopup() {
+  if (!currentUser) { closeModal('balance'); openModal('auth'); return; }
+  if (selectedAmount <= 0) { showToast('Lütfen bir tutar seçin.', 'error'); return; }
+  if (!validateCard()) return;
+
+  var overlay = document.getElementById('payProcessing');
+  var txt = document.getElementById('payProcessingText');
+  var btn = document.getElementById('payBtn');
+  overlay.classList.add('show');
+  btn.disabled = true;
+  txt.textContent = 'Ödeme işleniyor...';
+
+  setTimeout(function() {
+    txt.textContent = 'Bakiye yükleniyor...';
+    setTimeout(function() {
+      currentUser.balance += selectedAmount;
+      updateSessionBalance(currentUser.balance);
+      document.getElementById('modalBalance').textContent = '₺' + currentUser.balance.toFixed(2);
+      var bd = document.getElementById('balanceDisplay');
+      if (bd) bd.textContent = '₺' + currentUser.balance.toFixed(2);
+      overlay.classList.remove('show');
+      btn.disabled = false;
+      showToast('₺' + selectedAmount.toFixed(2) + ' bakiyenize yüklendi!', 'success');
+      selectedAmount = 0;
+      document.querySelectorAll('.amount-btn').forEach(function(b) { b.classList.remove('selected'); });
+      document.getElementById('customAmount').value = '';
+      document.getElementById('cardNumber').value = '';
+      document.getElementById('cardName').value = '';
+      document.getElementById('cardExp').value = '';
+      document.getElementById('cardCvv').value = '';
+      document.getElementById('cardPreviewNum').textContent = '•••• •••• •••• ••••';
+      document.getElementById('cardPreviewName').textContent = 'AD SOYAD';
+      document.getElementById('cardPreviewExp').textContent = 'AA/YY';
+      closeModal('balance');
+    }, 1000);
+  }, 1800);
+}
+
+function handleOrder() {
+  var link = document.getElementById('postLink').value.trim();
+  if (!currentUser) { showToast('Sipariş vermek için giriş yapınız.', 'error'); openModal('auth'); return; }
+  if (!link) { showToast('Lütfen Instagram gönderi linkini giriniz.', 'error'); document.getElementById('postLink').focus(); return; }
+  if (currentUser.balance < ORDER_PRICE) { showToast('Yetersiz bakiye. Lütfen ₺100 bakiye yükleyiniz.', 'error'); openModal('balance'); return; }
+
+  var overlay = document.getElementById('orderProcessing');
+  overlay.classList.add('show');
+
+  setTimeout(function() {
+    currentUser.balance -= ORDER_PRICE;
+    updateSessionBalance(currentUser.balance);
+    var bd = document.getElementById('balanceDisplay');
+    if (bd) bd.textContent = '₺' + currentUser.balance.toFixed(2);
+    document.getElementById('postLink').value = '';
+    overlay.classList.remove('show');
+    showToast('50 beğeni siparişiniz alındı! İşleme başlandı.', 'success');
+  }, 2000);
+}
+
+function scrollToOrder() {
+  document.getElementById('siparis').scrollIntoView({ behavior: 'smooth' });
+}
+
+renderNav();
+</script>
+</body>
+</html>
